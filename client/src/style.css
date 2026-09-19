@@ -1,0 +1,71 @@
+:root {
+  color: #f2f4f8;
+  background: #182025;
+  font-family: system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+canvas {
+  display: block;
+}
+
+.hud {
+  position: fixed;
+  z-index: 1;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ffffff2e;
+  border-radius: 0.5rem;
+  background: #10161dcc;
+  box-shadow: 0 0.5rem 2rem #0005;
+}
+
+h1,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: 1rem;
+}
+
+p {
+  margin-top: 0.35rem;
+  color: #c3cbd2;
+  font-size: 0.9rem;
+}
+
+.status::before {
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-right: 0.4rem;
+  border-radius: 50%;
+  background: currentColor;
+  content: '';
+}
+
+.status-connected {
+  color: #6ee7a0;
+}
+
+.status-connecting {
+  color: #f4ca64;
+}
+
+.status-disconnected {
+  color: #ff7d7d;
+}
