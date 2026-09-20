@@ -4,4 +4,55 @@ Original prompt: Genomför etapp 0 enligt PLAN.md med npm-workspace, Vite/Three.
 - Verifierat: `npm install`, `npm run check` och Vite-produktionsbygge.
 - Runtime-test verifierat med startad server/klient och webbläsare; testkuben får periodisk fysikimpuls för att vara synligt rörlig.
 - WebSocket-frånkoppling verifierad: klienten tar emot serverns stängning utan krasch.
-- Nästa etapp: etapp 1, körbar fordonsprototyp.
+- Etapp 1 tillagd: serverstyrd fyrhjulig kraftmodell, testbana, följkamera, tangentbord och debug-HUD.
+- Verifierat med Playwright-rendering samt isolerat WebSocket-test: gas flyttar bilen och styrning ändrar färdväg.
+- Styrningen mjukad till större svängradie och `R` återställer bilen serverauktoritativt efter en avåkning/spinn.
+- Testbanan breddad och förstorad cirka fem gånger; reset-cooldown och hjulpunktshastighet stabiliserar spinn efter körning.
+- Styrningen vänd rätt och körkänslan mjukad med lägre motorpådrag, högfartsstyrning och starkare broms/friktion.
+- Tog bort de osynliga testväggarna som fick konstant gas att slå i kanten och pendla mellan fart och stopp.
+- Sänkte luftmotståndet efter reproduktion: den tidigare nivån gav en instabil fartpendling runt 40 km/h.
+- Sänkte även rullmotståndet; kombinationen var den kvarvarande orsaken till fartvågen.
+- Nollställer nu Rapier-krafter och vridmoment efter varje fysiksteg; `addForce`/`addTorque` är kvarstående i Rapier.
+- Korrigerade chassits Rapier-massa till 900 kg och justerade grusfriktionen; konstant W är nu jämn i isolerat test.
+- Höjde motorimpulsen och styrregulatorns vridmoment; verifierat cirka 40 km/h efter fem sekunder samt tydlig riktningsändring.
+- Ersatte klientens måljagande `lerp` med en 100 ms snapshot-buffert och tidsbaserad interpolation för jämnare bil och följkamera; bygge och Playwright-rendering verifierade.
+- Trimmade acceleration till cirka 58 km/h efter fem sekunder och höjde tänkt toppfart; interpolation använder nu serverns fysiktick i stället för ojämna ankomsttider, vilket jämnar ut färdriktningen.
+- Minskade redundant WebSocket-input från 20 till 4 heartbeat-meddelanden per sekund (tangentändringar skickas direkt) och återanvänder kameravektorer för mindre GC; bygge och visuell kontroll godkända.
+- Följkamerans position och blickpunkt använder nu bildrutetidsbaserad dämpning; det minskar riktningsryck och ger samma känsla vid varierande bildfrekvens.
+- Fann att Windows-timern gav cirka 42 fysiksteg/s trots avsedda 60; serverloopen använder nu tidsackumulator, levererar verifierade 60 fysiksteg/s och 30 snapshots/s. Klientbufferten kortades till 75 ms.
+- Stabiliserade klientens uppskattning av serverklockan; snapshot-ankomstjitter kan inte längre flytta interpolationstiden fram och tillbaka vid varje paket.
+- Etapp 2 påbörjad med en blå dynamisk serverbil. Bil–bil-kollision och gemensamma snapshots verifierades; båda bilarna flyttades stabilt efter sammanstötning.
+- Lade till serverauktoritativ kollisionsklassning och separata skador för motor, styrning och hjul. Rak testkollision i 33,6 km/h klassades hård och sänkte motorn till 79,5% utan upprepad kontaktskada; HUD och körpåverkan verifierade.
+- Lade till serverfysiskt betonghinder och kombinationsbaserad definitiv utslagning. Verifierat att bilen haltar genom sju skadenivåer, slås ut när motor/hjul passerar gränsen och inte återupplivas av `R`.
+- Etapp 2 är verifierad; nästa planerade arbete är etapp 3 (bana, varv och depå).
+- Dokumenterade beslutad drop-in-arkitektur: återkommande femvarvsheat, solo mot klockan, sen anslutning till nästa heat, tio sekunders resultat och separat serverstyrd `MatchManager`. Planen ordnades om till bana/varv → match → depå → Pi.
+- Etapp 3 klar: ren banmodul kräver kontrollerna öst → norr → väst → mål, räknar fem varv och avvisar fel ordning/genväg. Tre deterministiska tester och klient-HUD verifierade.
+- Etapp 4 påbörjad med en fristående `MatchManager`: testade faser, femvarvs-solo med tid, tio sekunders resultat, väntande sen anslutning, DNF/utslagning och max fyra deltagare. Ingen runtime-integration ännu.
+- Kopplade banhändelser och utslagning till `MatchManager`; snapshots innehåller matchstatus och fysiken låses under nedräkning/resultat. Höjde motorkraften 17%, ökade backgränsen till 36 km/h och tog bort samtidig broms vid etablerad backning; uppmätt cirka 30 km/h bakåt efter fem sekunder.
+- Korrigerade backstyrningen så yaw-riktningen följer bilens faktiska färdriktning; verifierat i isolerad serverkörning. En framtida större fysikiteration bör använda Rapier raycast-hjul i stället för fysiska cylindercolliders.
+- Bytte spelarbilens egen kraft-/yaw-modell mot Rapiers `DynamicRayCastVehicleController` med fyra raycast-hjul, fjädring, däckgrepp, framhjulsstyrning och bakhjulshandbroms.
+- Verifierat: sju tester och klientbygge passerar; rak acceleration når cirka 56 km/h på 2,4 s, back cirka 34 km/h, vänsterstyrning böjer färdvägen åt rätt håll och Playwright visar stabil markkontakt utan konsolfel.
+- Korrigerade styrtecknet efter användartest och skickar nu Rapier-framhjulens styrvinkel i snapshots så att framhjulen synligt vrids på klienten.
+- Mjukade fjädringen, aktiverade pitch/roll för karosskrängning och gjorde riktningsberäkningen quaternion-säker. Visuell kaross/hjul är nu centrerade på Rapier-kollidern; CCD, extra solveriterationer och contact skin minskar överlapp vid kollision.
+- Verifierat i körning: kurvtagning gav cirka 0,088 quaternion-tilt (synlig krängning), rak bilkollision höll centrumavståndet över 2,78 m för 2,70 m långa karosser och webbläsaren rapporterade inga fel.
+- Lade till dämpad krängningsstabilisator, snabbare fjädringsretur och något lägre däck-/sidgrepp för lättare sladd. Efter avslutad kurva sjönk tilt från 0,042 till 0,008 på 0,5 s och i princip noll på 1 s.
+- Drivlinan är nu bakhjulsdriven. Rapier-hjulens rotationsvinklar skickas i snapshots och animerar alla fyra synliga hjul; eventuell 4WD-bonus lämnas till en framtida iteration.
+- Lade till asymmetriska ljusa markeringar på däcksidorna så hjulrotationen faktiskt går att uppfatta visuellt.
+- Korrigerade Rapiers broms från orimliga 1500 till 18 impuls-enheter per hjul och sänkte sidgreppet tydligt. Back aktiveras fortsatt först när framåtfarten bromsats ned; handbromsen släpper bakgreppet ytterligare.
+- Verifierat: byte från cirka 23 km/h framåt till back gav högst cirka 0,02 tilt utan nosstående; full sväng med handbroms nådde drygt 5 m/s sidfart. Alla sju tester och webbläsarkontrollen passerar.
+- Lade till Xbox/Gamepad API-stöd parallellt med tangentbordet: vänster spak styr, RT gas, LT broms/back, A handbroms och Y återställning, med deadzone och kantdetektering för reset.
+- Lade till synlig gamepad-diagnostik i HUD: anslutningsstatus, enhetsnamn samt livevärden för vänster spak, LT och RT. Det skiljer fokus/aktiveringsproblem från fel knappmappning.
+- Lade till dold fysikpanel via `?dev` eller `#dev`. Sex sliders ändrar serverns motor, broms, däckgrepp, sidgrepp, fjädring och krängningshämmare live inom servervaliderade intervall.
+- Fysikpanelen kan nu även ändra bilens massa 500–1800 kg; servern uppdaterar Rapier-collidern och räknar om rigid bodyns massegenskaper direkt.
+- Devpanelen har högre motormax (18000 per drivhjul) samt livejustering av styrutslag (0,2–0,7 rad) och fjädringsväg (0,10–0,55 m).
+- Lade till valbar fram-, bak- och fyrhjulsdrift samt `Gassladd`. Eftersom Rapier-raycast inte simulerar full differential/hjultröghet minskar gassladd sidgreppet på drivhjulen proportionellt mot gas och fart; bakhjulsdrift ger därmed power-oversteer.
+- Kompletterade gassladden med ett begränsat yaw-moment för bakhjulsdrift, eftersom raycast-controllerns däckkrafter annars fortsatte rikta upp bilen trots lågt bakgrepp. Framdrift får inget moment och 4WD får 30%.
+- Sänkte standardkrängningshämmaren från 18000 till 10000 och dämpningen från 3200 till 2600 för tydligare karosslutning utan att ta bort självresningen.
+- Bumpade paketen till 0.2.0, synlig byggversion till `v20260920a` och nätverksprotokollet till 3. Byggversion/protokoll visas i HUD, devpanel och serverlogg så gammal klient/server blir tydlig; följande byggen använder b, c och så vidare.
+- Körkänsleisolering v20260921a/p4: artificiellt girmoment och gasstyrd sidfriktion är separata devväxlar och av som standard. Rapier-hjulens position/fjädring/styrning/rotation synkas visuellt. Devpanelen visar kaross- och hastighetsriktning, sidglidningsvinkel och girhastighet; gul pil visar faktisk rörelseriktning.
+- v20260921b: hjulcentrum beräknas vid markkontakt från Rapiers faktiska kontaktpunkt plus kontaktnormal gånger hjulradien. Det hindrar det visuella däcket från att skära genom marken vid mjuk/lång fjädring; fallback utan kontakt använder fjädringslängden.
+- v20260921c: styrutslaget visas i grader i devpanelen (10–60°) och konverteras till radianer för server/Rapier. Den manuella klientändringen till 60 hade tidigare klämts av serverns max 0,7 rad (40°).
+- v20260921d: rotationsdämpningen sänktes 2,2→0,55, handbromsen separerades från ordinarie broms och sänktes 45→6 impuls per bakhjul/steg. Bakaxeln har 78% av framaxelns sidgrepp för mindre understyrning. Alla tre är livejusterbara i devpanelen.
+- v20260921e: naturligare driftgrund utan artificiellt girmoment eller gassladd. Framgreppet höjdes 0,36→0,48 medan bakaxelns relativa sidgrepp sänktes 0,78→0,58; längsgrepp 1,5→1,15, rotationsdämpning 0,55→0,25 och handbroms 6→3. Målet är tydligare instyrning och gradvis bakvagnssläpp med bevarad rörelseenergi.
+- v20260921f: devpanelen kan flytta spelarbilens fysiska tyngdpunkt 0,55 m bakåt eller framåt utan att flytta kaross, collider eller hjul. Massan och kubens tröghetsmoment appliceras nu explicit som Rapier-massegenskaper så totalvikten förblir oförändrad vid viktförskjutning.
+- v20260921g: användarens provkörda fysikvärden sparades som standard: framhjulsdrift, 1050 kg, tyngdpunkt +0,25 m, motor 16000, broms/handbroms 18, rotationsdämpning 0,25, däckgrepp 2,45, sidgrepp 0,26, bakgrepp 0,52, fjädring 20, fjädringsväg 0,49 m, styrutslag 49° och krängningshämmare 8000. Artificiella sladdhjälpmedel är fortsatt av.

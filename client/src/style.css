@@ -69,3 +69,53 @@ p {
 .status-disconnected {
   color: #ff7d7d;
 }
+
+.dev-panel {
+  position: fixed;
+  z-index: 2;
+  top: 1rem;
+  right: 1rem;
+  width: 18rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ffffff2e;
+  border-radius: 0.5rem;
+  background: #10161de8;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+}
+
+.dev-panel h2 {
+  margin: 0 0 0.6rem;
+  font-size: 1rem;
+}
+
+.dev-panel label,
+.dev-panel input,
+.dev-panel select {
+  display: block;
+  width: 100%;
+}
+
+.dev-panel label {
+  margin-top: 0.45rem;
+  color: #c3cbd2;
+  font-size: 0.8rem;
+}
+
+.dev-panel .dev-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.dev-panel .dev-toggle input {
+  width: auto;
+}
+
+.dev-diagnostics {
+  margin-top: 0.75rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid #ffffff2e;
+  color: #e4e9ed;
+  font: 0.78rem/1.45 ui-monospace, monospace;
+}

@@ -6,10 +6,22 @@ Klassiskt folkrace i webbläsare, 1–4 personer över nätverk. Ganska trovärd
 
 ## Mål och match
 
-- Kör överenskommet antal varv och försök nå mål före andra förare.
+- Ett normalt heat körs över fem varv med 1–4 spelare. Fem varv är standard och ska kunna göras konfigurerbart senare.
+- Kör heatets varv och försök nå mål före andra förare.
 - Kollisioner med andra bilar får försvåra deras körning och kan sätta dem ur spel.
-- Definiera exakt prioritet mellan målflagga, sista körbara bil och eventuell tidsgräns innan matchlogiken implementeras. Utgå tills vidare från att målgång avgör om någon går i mål, annars kan sista körbara bilen vinna.
-- Exakt banlängd, antal varv och detaljerade tiebreakers är **inte beslutade**.
+- Målgång avgör placeringen för förare som fullföljer. Utslagna förare får resultatet DNF och sorteras efter hur långt de kom; exakt tiebreaker och eventuell maxtid behöver speltestas.
+- Med endast en deltagare körs heatet mot klockan och sluttiden blir resultatet.
+
+## Drop-in och återkommande heat
+
+- Spelaren ansluter direkt i webbläsaren, anger ett förarnamn och behöver inte skapa ett permanent konto.
+- Mellan heat råder uppvärmning. Anslutna spelare får köra fritt medan servern förbereder nästa start.
+- Ett heat följer flödet `uppvärmning → nedräkning → race → resultat → uppvärmning` och startar om automatiskt.
+- Resultatet visas i tio sekunder. Därefter återställs bilar och komponentskador inför nästa heat.
+- Spelare som ansluter under race eller resultat blir väntande/åskådare och deltar automatiskt i nästa heat.
+- En utslagen förare återupplivas aldrig under samma heat. Bilen ligger kvar som ett fysiskt hinder tills heatet avslutas.
+- Ett heat kan köras med en enda spelare. Fler anslutna spelare, upp till fyra totalt, deltar från nästa start.
+- Ingen tung lobby eller separat startmeny krävs i grundversionen; en enkel namnvy, anslutningsstatus och information om aktuell fas räcker.
 
 ## Skadesystem: kunna halta hem
 

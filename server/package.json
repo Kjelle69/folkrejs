@@ -1,15 +1,15 @@
 {
   "name": "@folkrejs/server",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "node src/server.js",
-    "check": "node --check src/server.js"
+    "check": "node --check src/server.js && node --test src/*.test.js"
   },
   "dependencies": {
     "@dimforge/rapier3d-compat": "^0.20.0",
-    "@folkrejs/shared": "0.1.0",
+    "@folkrejs/shared": "0.2.0",
     "ws": "^8.21.3"
   }
 }

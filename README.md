@@ -1,6 +1,6 @@
 # Folkrejs
 
-Webbläsarbaserat folkracespel för 1–4 spelare med serverstyrd fysik, gradvisa skador och reparationsdepå. Etapp 0 innehåller en minimal klient/server-demonstration med en Rapier-simulerad kub.
+Webbläsarbaserat folkracespel för 1–4 spelare med serverstyrd fysik, gradvisa skador och reparationsdepå. Etapp 1 innehåller en lokal körprototyp med en Rapier-simulerad bil.
 
 ## Projektmapp på Windows
 
@@ -22,7 +22,9 @@ Starta klient och server tillsammans:
 npm run dev
 ```
 
-Öppna sedan `http://localhost:5173`. Vite-klienten visar en markyta, en kub vars position beräknas av Rapier på servern och anslutningsstatus.
+Öppna sedan `http://localhost:5173`. Klienten visar en enkel grusliknande testbana, en serverstyrd bil och anslutningsstatus.
+
+Styr med W/upp (gas), S/ned (broms/back), A/D eller vänster/höger (styrning), mellanslag (handbroms) och R (återställ bilen). HUD:en visar hastighet, sidledsslipp och uppskattat grepp.
 
 Separat går det även att köra `npm run dev:server` och `npm run dev:client`. Serverns WebSocket lyssnar på `127.0.0.1:8080`; portarna kan ändras med miljövariablerna `PORT`, `HOST` och `VITE_WS_PORT`.
 
@@ -42,10 +44,10 @@ Om serverprocessen stoppas ska klienten visa att servern är frånkopplad och f�
 - `ARCHITECTURE.md` – klient/server, nätverk och Pi 5.
 - `.agents/skills/folkrejs-iteration/SKILL.md` – lokal skill för små, verifierbara Codex-iterationer.
 
-## Första uppdraget till Codex
+## Teknisk avgränsning i etapp 1
 
-> Läs AGENTS.md, PLAN.md och ARCHITECTURE.md. Inspektera befintliga filer. Genomför endast etapp 0: sätt upp lokal npm-workspace, minimal Three.js/Vite-klient, separat Node/Rapier-server och WebSocket-anslutning. Visa ett objekt vars position beräknas på servern. Verifiera start och frånkoppling. Uppdatera PLAN.md och README.md med verkliga startkommandon. Implementera inte bilar eller spelregler ännu.
+Servern simulerar en enkel rigid-body-bil med samlade fyrhjuls-krafter för hjulgrepp, styrning, motor, broms och handbroms. Tuningsiffrorna finns i `shared/src/vehicle.js`. Det är ännu inte full hjulfjädring, skador, kollisioner mellan bilar eller multiplayer.
 
 ## Status
 
-Etapp 0 är genomförd. Bilar, bana, skador, depå, matchmaking och Raspberry Pi-drift ingår inte ännu.
+Etapp 1 är genomförd lokalt. Skador, depå, matchmaking och Raspberry Pi-drift ingår inte ännu.
